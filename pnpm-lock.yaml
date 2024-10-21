@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
-      '@binance/connector':
-        specifier: ^3.5.0
-        version: 3.5.0
       '@fastify/cors':
         specifier: ^10.0.1
         version: 10.0.1
+      axios:
+        specifier: ^1.7.7
+        version: 1.7.7
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -29,10 +29,6 @@ importers:
         version: 5.6.3
 
 packages:
-
-  '@binance/connector@3.5.0':
-    resolution: {integrity: sha512-p9OjjIO4X1fa3dLuR12KCE558Qum9Ano1DGlxnHemcTHdX+irCJT0KLEKUTDMLEMKZReskVsNveVW1bLvgZN7g==}
-    engines: {node: '>=12.22.3', npm: '>=6.14.13'}
 
   '@fastify/ajv-compiler@4.0.1':
     resolution: {integrity: sha512-DxrBdgsjNLP0YM6W5Hd6/Fmj43S8zMKiFJYgi+Ri3htTGAowPVG/tG1wpnWLMjufEnehRivUCKZ1pLDIoZdTuw==}
@@ -350,28 +346,7 @@ packages:
     resolution: {integrity: sha512-9WWbymnqj57+XEuqADHrCJ2eSXzn8WXIW/YSGaZtb2WKAInQ6CHfaUUcTyyver0p8BDg5StLQq8h1vtZuwmOig==}
     engines: {node: '>=16'}
 
-  ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
 snapshots:
-
-  '@binance/connector@3.5.0':
-    dependencies:
-      axios: 1.7.7
-      ws: 8.18.0
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - utf-8-validate
 
   '@fastify/ajv-compiler@4.0.1':
     dependencies:
@@ -671,5 +646,3 @@ snapshots:
     dependencies:
       tr46: 4.1.1
       webidl-conversions: 7.0.0
-
-  ws@8.18.0: {}

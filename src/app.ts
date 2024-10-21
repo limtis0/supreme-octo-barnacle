@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors'
+import healthzRoutes from './features/healthz/routes';
 
 async function bootstrap() {
     const app = fastify();
@@ -8,6 +9,7 @@ async function bootstrap() {
     await app.register(cors);
 
     // TODO Add routes
+    app.register(healthzRoutes);
 
     app.listen({ port: 3001 }, (error, address) => {
         if (error) {
