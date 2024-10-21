@@ -8,7 +8,7 @@ function isKlinesError(obj: KlinesResponse | KlinesError): obj is KlinesError {
     return (obj as unknown as any)['msg'] !== undefined;
 }
 
-export async function getChanges(params: {
+export async function getKlines(params: {
     symbol: string;
     interval: BinanceInterval;
     startTime?: number;
@@ -29,11 +29,39 @@ export async function getChanges(params: {
     return data.map(kline => {
         return {
             openTime: kline[0] as number,
-            openPrice: kline[1] as string,
-            highPrice: kline[2] as string,
-            lowPrice: kline[3] as string,
-            closePrice: kline[4] as string,
             closeTime: kline[6] as number,
+            openPrice: Number(kline[1] as string),
+            closePrice: Number(kline[4] as string),
+            lowPrice: Number(kline[3] as string),
+            highPrice: Number(kline[2] as string),
         };
     });
+}
+
+export async function getChangesFromKlines(klines: Awaited<ReturnType<typeof getKlines>>) {
+    let startNode = klines[klines.length - 1];
+    let currentPrice = startNode.openPrice;
+
+    const result: { changeAmount: number, price: number, timestamp: number}[] = [
+        {
+            changeAmount: 0,
+            price: currentPrice,
+            timestamp: startNode.openTime
+        }
+    ];
+    
+    for (let i = klines.length - 1; i >= 0; i--) {
+        const change = klines[i];
+        const difference = change.openPrice - currentPrice; 
+
+        if (difference !== 0) {
+            result.push({
+                changeAmount: difference,
+                price: change.openPrice,
+                timestamp: change.openTime
+            });
+        }
+    }
+
+    return result;
 }

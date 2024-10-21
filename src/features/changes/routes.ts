@@ -1,30 +1,40 @@
 import { FastifyInstance } from "fastify";
-import { getChanges } from "./changesService";
+import { getChangesFromKlines, getKlines } from "./changesService";
 import { BinanceInterval } from "@/lib/enums/binanceInterval";
 
 export default async function changesRoutes(app: FastifyInstance) {
-    app.get<{ Querystring: { symbol: string, startTime?: number, endTime?: number } }>('/api/changes', {
+    app.get<{ Querystring: { symbol: string } }>('/api/changes', {
         schema: {
             querystring: {
                 type: 'object',
-                required: ['symbol', 'interval'],
+                required: ['symbol'],
                 properties: {
-                    symbol: { type: 'string' },
-                    startTime: { type: 'integer' },
-                    endTime: { type: 'integer' }
+                    symbol: { type: 'string' }
                 }
             }
         }
     }, async (request, reply) => {
-        const { symbol, startTime, endTime } = request.query;
-
-            const object = await getChanges({
+        const { symbol } = request.query;
+        
+        try {
+            const klines = await getKlines({
                 symbol: symbol,
-                startTime: startTime,
-                interval: BinanceInterval["5m"],
-                endTime: endTime
-            })
+                interval: BinanceInterval['5m']
+            });
 
-            return reply.code(200).send(object);
+            const changes = await getChangesFromKlines(klines);
+
+            return reply.code(200).send(changes);
+        }
+        catch (error) {
+            if (error instanceof BinanceException) {
+                return reply.code(400).send({
+                    error: error.message
+                });
+            }
+            return reply.code(500).send({
+                error: 'Internal server error'
+            });
+        }
     });
 }
