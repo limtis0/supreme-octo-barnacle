@@ -52,7 +52,7 @@ export async function getChangesFromKlines(klines: Awaited<ReturnType<typeof get
     
     for (let i = klines.length - 1; i >= 0; i--) {
         const change = klines[i];
-        const difference = change.openPrice - currentPrice; 
+        const difference = Number((change.openPrice - currentPrice).toFixed(6));
 
         if (difference !== 0) {
             result.push({
