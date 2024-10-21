@@ -5,6 +5,11 @@ import healthzRoutes from './features/healthz/routes';
 async function bootstrap() {
     const app = fastify();
 
+    app.setErrorHandler((error, request, reply) => {
+        console.error(`Error while requesting ${request.url}: ${error}`);
+        return reply.code(500).send({ error: 'Internal server error' });
+    });
+
     // ! Set up domain-name in production
     await app.register(cors);
 
