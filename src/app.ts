@@ -23,7 +23,7 @@ async function bootstrap() {
     // ! Set up domain-name in production
     await app.register(cors);
 
-    // TODO Add routes
+    // Add auto-load
     app.register(healthzRoutes);
     app.register(changesRoutes);
 
