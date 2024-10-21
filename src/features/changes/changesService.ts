@@ -1,6 +1,13 @@
 import { binanceClient } from "@/lib/binanceClient";
 import { BinanceInterval } from "@/lib/enums/binanceInterval";
 
+type KlinesResponse = (number | string)[][];
+type KlinesError =  { code: number, msg: string };
+
+function isKlinesError(obj: KlinesResponse | KlinesError): obj is KlinesError {
+    return (obj as unknown as any)['msg'] !== undefined;
+}
+
 export async function getChanges(params: {
     symbol: string;
     interval: BinanceInterval;
@@ -8,12 +15,18 @@ export async function getChanges(params: {
     endTime?: number;
     limits?: number
 }) {
-
-    const response = await binanceClient.get<(number|string)[][]>('klines', {
-        params: params
+    const response = await binanceClient.get<KlinesResponse | KlinesError>('klines', {
+        params: params,
+        validateStatus: (status) => status === 200 || status === 400
     });
 
-    return response.data.map(kline => {
+    const data = response.data;
+
+    if (isKlinesError(data)) {
+        throw new Error(data.msg);
+    }
+
+    return data.map(kline => {
         return {
             openTime: kline[0] as number,
             openPrice: kline[1] as string,
