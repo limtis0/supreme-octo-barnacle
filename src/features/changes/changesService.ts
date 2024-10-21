@@ -6,13 +6,14 @@ export async function getChanges(params: {
     interval: BinanceInterval;
     startTime?: number;
     endTime?: number;
-    limtis?: number
+    limits?: number
 }) {
-    const response: (number|string)[][] = await binanceClient.get('klines', {
+
+    const response = await binanceClient.get<(number|string)[][]>('klines', {
         params: params
     });
 
-    return response.map(kline => {
+    return response.data.map(kline => {
         return {
             openTime: kline[0] as number,
             openPrice: kline[1] as string,
